@@ -11,16 +11,18 @@
         />
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form method="post" action="/register">
+        <form action="/register" method="post">
           <!-- Email input -->
           <div class="form-outline mb-4">
             <label class="form-label">Full Name</label>
             <input
+              name="name"
               type="text"
               class="form-control form-control-lg"
               placeholder="Enter a valid email address"
             />
           </div>
+
           <div class="form-outline mb-4">
             <label class="form-label">Email address</label>
             <input
@@ -32,9 +34,20 @@
           </div>
 
           <div class="form-outline mb-4">
+            <label class="form-label">Mobile number</label>
+            <input
+              name="mobile"
+              type="number"
+              class="form-control form-control-lg"
+              placeholder="Enter a valid email address"
+            />
+          </div>
+
+          <div class="form-outline mb-4">
             <label class="form-label" for="form3Example3"
               >Engineering domain (branch)
             </label>
+
             <select
               class="form-select"
               name="domain"
@@ -93,6 +106,7 @@
               </option>
             </select>
           </div>
+
           <div class="form-outline mb-3">
             <label class="form-label">Create Password</label>
             <input
@@ -102,6 +116,7 @@
               placeholder="Enter password"
             />
           </div>
+
           <div class="form-outline mb-3">
             <label class="form-label">Confirm Password</label>
             <input

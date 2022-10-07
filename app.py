@@ -16,7 +16,7 @@ CORS(app)
 
 
 
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('database.db',check_same_thread=False)
 
 
 
@@ -25,7 +25,7 @@ def hello():
     if request.method == 'GET':
         return render_template("videos.html")
     if request.method == 'POST':
-        query = request.form.get()['query']
+        query = request.form['query']
         pt1 = 'https://www.google.com/search?q='
         url = pt1 + query
         return redirect(url, 301)
@@ -33,7 +33,7 @@ def hello():
 @app.route('/YTSearch',methods=['POST'])
 def YTSearch():
     if request.method == 'POST':
-        query = request.form.get()['query']
+        query = request.form['query']
         print(query)
         pt1 = 'https://www.youtube.com/results?search_query='
         url = pt1 + query
@@ -44,7 +44,7 @@ def YTSearch():
 @app.route('/StackOSearch',methods=['POST'])
 def StackOSearch():
     if request.method == 'POST':
-        query = request.form.get()['query']
+        query = request.form['query']
         print(query)
         pt1 = 'https://stackoverflow.com/search?q='
         url = pt1 + query
@@ -53,7 +53,7 @@ def StackOSearch():
 @app.route('/StackESearch',methods=['POST'])
 def StackESearch():
     if request.method == 'POST':
-        query = request.form.get()['query']
+        query = request.form['query']
         print(query)
         pt1 = 'https://stackexchange.com/search?q='
         url = pt1 + query
@@ -62,7 +62,7 @@ def StackESearch():
 @app.route('/GitSearch',methods=['POST'])
 def GitSearch():
     if request.method == 'POST':
-        query = request.form.get()['query']
+        query = request.form['query']
         print(query)
         pt1 = 'https://github.com/search?q='
         url = pt1 + query
@@ -73,7 +73,7 @@ def GitSearch():
 def login():
     if request.method == 'GET':
         return render_template('entry/login.html')
-        # session["name"] = request.form.get("name")
+        # session["name"] = request.form("name")
     if request.method == 'POST':
         flash(f"Record Saved!", "success")
         return 'login'
@@ -84,27 +84,31 @@ def register():
         return render_template('entry/register.html')
 
     if request.method == 'POST':
-        if request.form.get('password') != request.form.get('confpassword'):
+        if request.form['password'] != request.form['confpassword']:
+            print(request.form['password']," ",request.form['confpassword'])
             flash("Password and Confirm Password does not match") 
             return redirect(url_for('register'))
         else:
-            email = request.form.get('email')
-            sql_query = "select * from user where email="+email
-            conn.execute(sql_query)
-            conn.commit()
+            email = request.form['email']
+            verify_query = "select * from club_users where email = "+str(email)+";"
+            print(verify_query)
+            conn.execute(verify_query)
+            conn.commit
             user = conn.fetchall()
             print("email verified")
             if user:
                 flash('User already exists')
                 return redirect(url_for('register'))
             else:
-                name = request.form.get('name' )
-                email = request.form.get('email')
-                domain = request.form.get('domain')
-                year = request.form.get('year')
-                password = request.form.get('password')
-                conn.execute("INSERT INTO user (name,email,doamin,year,password) VALUES (%s,%s,%s,%s,%s)",(name,email,domain,year,password))
-                conn.commit()
+                name = request.form['name' ]
+                email = request.form['email']
+                mobile = request.form['mobile']
+                domain = request.form['domain']
+                year = request.form['year']
+                password = request.form['password']
+                print(name,email,mobile,domain,year,password)
+                conn.execute("INSERT INTO club_users (name,email,mobile,doamin,year,password) VALUES (%s,%s,%s,%s,%s,%s)",(name,email,mobile,domain,year,password))
+                conn.commit
                 flash('You are now registered and can log in')
                 print("data inserted")
                 return redirect(url_for('register'))
@@ -135,7 +139,6 @@ def register():
 def logout():
     session.clear()
     return make_response(jsonify({'message' : 'You successfully logged out'}))
-
 
 
 if __name__ == '__main__':
