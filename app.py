@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect,session, flash,make_response,jsonify
+from flask import Flask, render_template, request, redirect,session,url_for, flash,make_response,jsonify
 from flask_session import Session
 import jwt
 from datetime import datetime, timedelta
 from flask_cors import CORS
 import mysql.connector
-
+import sqlite3
 
 
 app = Flask(__name__)
@@ -14,16 +14,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 CORS(app)
 
-# this is configuration for sql database connection 
-mydb = mysql.connector.connect(
-	host = "remotemysql.com", # your host address (yourservice.com)
-	user = "pvDhFaBOFP", # your yasername for sql database
-	password = "AOATIK73jC", # your password 
-    database = "pvDhFaBOFP" # your database name
-)
 
-cursor = mydb.cursor()
 
+conn = sqlite3.connect('database.db')
 
 
 
@@ -32,7 +25,7 @@ def hello():
     if request.method == 'GET':
         return render_template("videos.html")
     if request.method == 'POST':
-        query = request.form['query']
+        query = request.form.get()['query']
         pt1 = 'https://www.google.com/search?q='
         url = pt1 + query
         return redirect(url, 301)
@@ -40,7 +33,7 @@ def hello():
 @app.route('/YTSearch',methods=['POST'])
 def YTSearch():
     if request.method == 'POST':
-        query = request.form['query']
+        query = request.form.get()['query']
         print(query)
         pt1 = 'https://www.youtube.com/results?search_query='
         url = pt1 + query
@@ -51,7 +44,7 @@ def YTSearch():
 @app.route('/StackOSearch',methods=['POST'])
 def StackOSearch():
     if request.method == 'POST':
-        query = request.form['query']
+        query = request.form.get()['query']
         print(query)
         pt1 = 'https://stackoverflow.com/search?q='
         url = pt1 + query
@@ -60,7 +53,7 @@ def StackOSearch():
 @app.route('/StackESearch',methods=['POST'])
 def StackESearch():
     if request.method == 'POST':
-        query = request.form['query']
+        query = request.form.get()['query']
         print(query)
         pt1 = 'https://stackexchange.com/search?q='
         url = pt1 + query
@@ -69,7 +62,7 @@ def StackESearch():
 @app.route('/GitSearch',methods=['POST'])
 def GitSearch():
     if request.method == 'POST':
-        query = request.form['query']
+        query = request.form.get()['query']
         print(query)
         pt1 = 'https://github.com/search?q='
         url = pt1 + query
@@ -89,57 +82,52 @@ def login():
 def register():
     if request.method == 'GET':
         return render_template('entry/register.html')
-    if request.method == 'POST':
-        return 'register'
 
-# login api route 
-@app.route('/login' , methods=['POST'])
-def login():
     if request.method == 'POST':
-        dump = request.get_json()
-        username = dump['username']
-        password =  dump['password']
-        cursor.execute("SELECT * FROM users WHERE username = '"+username+"' AND password = '"+password+"';")
-        data = cursor.fetchall()
-        if (len(data)==0 or len(data)>1):
-            resp = jsonify({'message' : 'Invalid username or password'})
-            resp.status_code = 400
-            return resp
+        if request.form.get('password') != request.form.get('confpassword'):
+            flash("Password and Confirm Password does not match") 
+            return redirect(url_for('register'))
         else:
-            # added username in session
-            session['username'] = username
-            # return jwt token 
-            token = jwt.encode({'public_id': username,'exp' : datetime.utcnow() + timedelta(hours= 12)}, app.config['SECRET_KEY'])
-            
-            return make_response(jsonify({'token' : token.decode('UTF-8'),'username' : username }), 201)
-
-#  register api route 
-@app.route('/register' , methods=['POST'])
-def register():
-    if request.method == 'POST':
-        #check confirm passowrd and password
-        if request.form['password'] != request.form['confpassword']:
-            resp = jsonify({'message':'Password and Confirm Password does not match'})
-            resp.status_code = 401
-            return make_response(resp)
-        #check if username already exists
-        else:
-            username = request.form['username']
-            cursor.execute("SELECT * FROM users WHERE username = %s", [username])
-            user = cursor.fetchone()
+            email = request.form.get('email')
+            sql_query = "select * from user where email="+email
+            conn.execute(sql_query)
+            conn.commit()
+            user = conn.fetchall()
+            print("email verified")
             if user:
-                resp = jsonify({'message':'User already exists'})
-                resp.status_code = 401
-                return make_response(resp)
+                flash('User already exists')
+                return redirect(url_for('register'))
             else:
-                name = request.form['name']
-                email = request.form['email']
-                contact = request.form['contact']
-                username = request.form['username']
-                password = request.form['password']
-                cursor.execute("INSERT INTO users (name,email,contact,username,password) VALUES (%s,%s,%s,%s,%s)",(name,email,contact,username,password))
-                mydb.commit()
-                return make_response(jsonify({'message' : 'You are now registered and can log in'}))
+                name = request.form.get('name' )
+                email = request.form.get('email')
+                domain = request.form.get('domain')
+                year = request.form.get('year')
+                password = request.form.get('password')
+                conn.execute("INSERT INTO user (name,email,doamin,year,password) VALUES (%s,%s,%s,%s,%s)",(name,email,domain,year,password))
+                conn.commit()
+                flash('You are now registered and can log in')
+                print("data inserted")
+                return redirect(url_for('register'))
+
+
+# @app.route('/login' , methods=['POST'])
+# def login():
+#     if request.method == 'POST':
+#         dump = request.get_json()
+#         username = dump['username']
+#         password =  dump['password']
+#         conn.execute("SELECT * FROM users WHERE username = '"+username+"' AND password = '"+password+"';")
+#         data = conn.fetchall()
+#         if (len(data)==0 or len(data)>1):
+#             resp = jsonify({'message' : 'Invalid username or password'})
+#             resp.status_code = 400
+#             return resp
+#         else:
+#             # added username in session
+#             session['username'] = username
+#             # return jwt token 
+#             token = jwt.encode({'public_id': username,'exp' : datetime.utcnow() + timedelta(hours= 12)}, app.config['SECRET_KEY'])
+#             return make_response(jsonify({'token' : token.decode('UTF-8'),'username' : username }), 201)
 
 
 # logout route

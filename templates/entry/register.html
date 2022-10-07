@@ -11,22 +11,21 @@
         />
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form>
+        <form method="post" action="/register">
           <!-- Email input -->
           <div class="form-outline mb-4">
-            <label class="form-label" for="form3Example3">Full Name</label>
+            <label class="form-label">Full Name</label>
             <input
               type="text"
-              id="form3Example3"
               class="form-control form-control-lg"
               placeholder="Enter a valid email address"
             />
           </div>
           <div class="form-outline mb-4">
-            <label class="form-label" for="form3Example3">Email address</label>
+            <label class="form-label">Email address</label>
             <input
+              name="email"
               type="email"
-              id="form3Example3"
               class="form-control form-control-lg"
               placeholder="Enter a valid email address"
             />
@@ -36,15 +35,27 @@
             <label class="form-label" for="form3Example3"
               >Engineering domain (branch)
             </label>
-            <select class="form-select" aria-label="Default select example">
+            <select
+              class="form-select"
+              name="domain"
+              aria-label="Default select example"
+            >
               <option selected>Select . . .</option>
-              <option value="1">Computer Science & Engineering</option>
-              <option value="2">Information Technology</option>
-              <option value="3">Mechnical Engineering</option>
-              <option value="3">Civil Engineering</option>
-              <option value="3">Electronics & Telecom Engineering</option>
-              <option value="3">BCA</option>
-              <option value="3">BCS</option>
+              <option value="Computer Science & Engineering">
+                Computer Science & Engineering
+              </option>
+              <option value="Information Technology">
+                Information Technology
+              </option>
+              <option value="Mechnical Engineering">
+                Mechnical Engineering
+              </option>
+              <option value="Civil Engineering">Civil Engineering</option>
+              <option value="Electronics & Telecom Engineering">
+                Electronics & Telecom Engineering
+              </option>
+              <option value="BCA">BCA</option>
+              <option value="BCS">BCS</option>
             </select>
           </div>
 
@@ -53,54 +64,53 @@
             <label class="form-label" for="form3Example4"
               >Current educational year</label
             >
-            <select class="form-select" aria-label="Default select example">
+            <select
+              class="form-select"
+              name="year"
+              aria-label="Default select example"
+            >
               <option selected>Select . . .</option>
-              <option value="1">First Year (B.E / B.Tech)</option>
-              <option value="2">Second Year (B.E / B.Tech)</option>
-              <option value="3">Third Year (B.E / B.Tech)</option>
-              <option value="3">Final Year (B.E / B.Tech)</option>
-              <option value="1">First Year (BCA / BCS)</option>
-              <option value="2">Second Year (BCA / BCS)</option>
-              <option value="3">Third Year (BCA / BCS)</option>
+              <option value="First Year (B.E / B.Tech)">
+                First Year (B.E / B.Tech)
+              </option>
+              <option value="Second Year (B.E / B.Tech)">
+                Second Year (B.E / B.Tech)
+              </option>
+              <option value="Third Year (B.E / B.Tech)">
+                Third Year (B.E / B.Tech)
+              </option>
+              <option value="Final Year (B.E / B.Tech)">
+                Final Year (B.E / B.Tech)
+              </option>
+              <option value="First Year (BCA / BCS)">
+                First Year (BCA / BCS)
+              </option>
+              <option value="Second Year (BCA / BCS)">
+                Second Year (BCA / BCS)
+              </option>
+              <option value="Third Year (BCA / BCS)">
+                Third Year (BCA / BCS)
+              </option>
             </select>
           </div>
           <div class="form-outline mb-3">
-            <label class="form-label" for="form3Example4"
-              >Create Password</label
-            >
+            <label class="form-label">Create Password</label>
             <input
+              name="password"
               type="password"
-              id="form3Example4"
               class="form-control form-control-lg"
               placeholder="Enter password"
             />
           </div>
           <div class="form-outline mb-3">
-            <label class="form-label" for="form3Example4"
-              >Confirm Password</label
-            >
+            <label class="form-label">Confirm Password</label>
             <input
+              name="confpassword"
               type="password"
-              id="form3Example4"
               class="form-control form-control-lg"
               placeholder="Enter password"
             />
           </div>
-
-          <!-- <div class="d-flex justify-content-between align-items-center">
-            <div class="form-check mb-0">
-              <input
-                class="form-check-input me-2"
-                type="checkbox"
-                value=""
-                id="form2Example3"
-              />
-              <label class="form-check-label" for="form2Example3">
-                Remember me
-              </label>
-            </div>
-            <a href="#!" class="text-body">Forgot password?</a>
-          </div> -->
 
           <div class="text-center text-lg-start mt-4 pt-2">
             <button
