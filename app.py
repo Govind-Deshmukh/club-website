@@ -88,30 +88,32 @@ def register():
             print(request.form['password']," ",request.form['confpassword'])
             flash("Password and Confirm Password does not match") 
             return redirect(url_for('register'))
+        # else:
+        #     email = request.form['email']
+        #     verify_query = "select * from club_users where email = "+str(email)+";"
+        #     print(verify_query)
+        #     conn.execute(verify_query)
+        #     conn.commit
+        #     user = conn.fetchall()
+        #     print("email verified")
+        #     if user:
+        #         flash('User already exists')
+        #         return redirect(url_for('register'))
         else:
+            name = request.form['name' ]
             email = request.form['email']
-            verify_query = "select * from club_users where email = "+str(email)+";"
-            print(verify_query)
-            conn.execute(verify_query)
+            mobile = request.form['mobile']
+            domain = request.form['domain']
+            year = request.form['year']
+            password = request.form['password']
+            print(name,email,mobile,domain,year,password)
+            print(type(email))
+            conn.execute(f'''INSERT INTO club_users (name,email,mobile,doamin,year,password) 
+            VALUES ({name},{email},{mobile},{domain},{year},{password});''')
             conn.commit
-            user = conn.fetchall()
-            print("email verified")
-            if user:
-                flash('User already exists')
-                return redirect(url_for('register'))
-            else:
-                name = request.form['name' ]
-                email = request.form['email']
-                mobile = request.form['mobile']
-                domain = request.form['domain']
-                year = request.form['year']
-                password = request.form['password']
-                print(name,email,mobile,domain,year,password)
-                conn.execute("INSERT INTO club_users (name,email,mobile,doamin,year,password) VALUES (%s,%s,%s,%s,%s,%s)",(name,email,mobile,domain,year,password))
-                conn.commit
-                flash('You are now registered and can log in')
-                print("data inserted")
-                return redirect(url_for('register'))
+            flash('You are now registered and can log in')
+            print("data inserted")
+            return redirect(url_for('register'))
 
 
 # @app.route('/login' , methods=['POST'])
