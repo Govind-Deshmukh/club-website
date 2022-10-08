@@ -139,7 +139,7 @@ def dashboard():
 @app.route('/logout', methods=['GET','POST'])
 def logout():
     session.clear()
-    return make_response(jsonify({'message' : 'You successfully logged out'}))
+    return redirect(url_for('hello'))
 
 
 if __name__ == '__main__':
