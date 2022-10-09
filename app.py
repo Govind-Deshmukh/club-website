@@ -97,7 +97,7 @@ def register():
             verify_query = "select * from club_users where email = '"+str(email)+"';"
             user = conn.execute(verify_query)
             if user:
-                flash('User already exists','error')
+                flash('Email already exists','error')
                 return redirect(url_for('register'))
             else:
                 name = request.form['name' ]
@@ -128,12 +128,27 @@ def login():
             # added username in session
             session["user"] = email
             flash('Login successful','success')
-            return redirect(url_for())
+            return redirect(url_for('dashboard'))
 
 # logout route
 @app.route('/dashboard', methods=['GET','POST'])
 def dashboard():
-    return render_template('Dashboard/dashboard.html')
+    if request.method == 'GET':
+        side1 = session['user']
+        verify_query = "select * from club_users where email = '"+str(side1)+"';"
+        side2 = conn.execute(verify_query)
+        
+        if 'user' in session:
+            if(side1 == side2):
+                return render_template('Dashboard/dashboard.html')
+            # return redirect(url_for('dashboard'))
+            else:
+                flash('Clear cookies and try login again','error')
+        else:
+            flash('You are not logged in','error')
+            return redirect(url_for('login'))
+    if request.method == 'POST':
+        return 'MF this method is not allowed <br> Contact me to join my team'
 
 # logout route
 @app.route('/logout', methods=['GET','POST'])
