@@ -120,10 +120,16 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        data = conn.execute("SELECT * FROM club_users WHERE email = '"+email+"' AND password = '"+password+"';")
-        if (len(data)==0 or len(data)>1):
-            flash('Invalid username or password','error')
-            return redirect(url_for('login'))
+        c.execute("SELECT * FROM club_users WHERE email = '"+email+"' AND password = '"+password+"';")
+        result = c.fetchone()
+        print(result[2],result[6])
+        if result[2]!=email or password!=result[6]:
+            if(result[2]!=email):
+                flash('Invalid username','error')
+                return redirect(url_for('login'))
+            elif password!=result[6]:
+                flash('Invalid password','error')
+                return redirect(url_for('login'))
         else:
             # added username in session
             session["user"] = email
@@ -136,10 +142,12 @@ def dashboard():
     if request.method == 'GET':
         side1 = session['user']
         verify_query = "select * from club_users where email = '"+str(side1)+"';"
-        side2 = conn.execute(verify_query)
+
+        side2 = c.execute(verify_query)
+        result = c.fetchone()
         
         if 'user' in session:
-            if(side1 == side2):
+            if(side1 == result[2]):
                 return render_template('Dashboard/dashboard.html')
             # return redirect(url_for('dashboard'))
             else:

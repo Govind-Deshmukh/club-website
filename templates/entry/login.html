@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %} {% block login %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <section class="vh-75">
@@ -12,13 +11,13 @@
         />
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form>
+        <form method="post" action="/login">
           <!-- Email input -->
           <div class="form-outline mb-4">
-            <label class="form-label" for="form3Example3">Email address</label>
+            <label class="form-label">Email address</label>
             <input
               type="email"
-              id="form3Example3"
+              name="email"
               class="form-control form-control-lg"
               placeholder="Enter a valid email address"
             />
@@ -26,10 +25,10 @@
 
           <!-- Password input -->
           <div class="form-outline mb-3">
-            <label class="form-label" for="form3Example4">Password</label>
+            <label class="form-label">Password</label>
             <input
               type="password"
-              id="form3Example4"
+              name="password"
               class="form-control form-control-lg"
               placeholder="Enter password"
             />
@@ -62,15 +61,6 @@
               Don't have an account?
               <a href="/register" class="link-danger">Register</a>
             </p>
-            {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
           </div>
         </form>
       </div>
