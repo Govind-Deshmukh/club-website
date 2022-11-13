@@ -1,0 +1,10 @@
+.navbar {
+  background-color: #e3f2fd;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+.nav-item {
+  margin-right: 0.5 rem;
+  margin-left: 0.5 rem;
+}
